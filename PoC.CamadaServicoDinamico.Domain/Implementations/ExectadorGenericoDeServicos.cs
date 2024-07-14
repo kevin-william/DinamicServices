@@ -1,13 +1,22 @@
 ﻿using CamadaServicoDinamicoDomain.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CamadaServicoDinamicoDomain.Implementations
 {
-    public static class ExectadorGenericoDeServicos
+    public class ExectadorGenericoDeServicos
     {
-        public static TResult ExecuteService<TService, TInput, TResult>(TInput parametros)
-            where TService : IService<TInput, TResult>, new()
+        private readonly IServiceProvider _serviceProvider;
+
+        public ExectadorGenericoDeServicos(IServiceProvider serviceProvider)
         {
-            var servico = new TService();
+            _serviceProvider = serviceProvider
+                    ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        public TResult ExecuteService<TService, TInput, TResult>(TInput parametros)
+            where TService : IService<TInput, TResult>
+        {
+            var servico = _serviceProvider.GetRequiredService<TService>();
             return servico.Execute(parametros);
         }
     }

@@ -1,4 +1,5 @@
-﻿using CamadaServicoDinamicoDomain.Entities.Request;
+﻿using CamadaServicoDinamicoConsoleApplication.Helpers;
+using CamadaServicoDinamicoDomain.Entities.Request;
 using CamadaServicoDinamicoDomain.Entities.Response;
 using CamadaServicoDinamicoDomain.Implementations;
 using System;
@@ -16,7 +17,12 @@ namespace CamadaServicoDinamicoConsoleApplication
                 Guid = Guid.NewGuid(),
                 Id = 1
             };
-            var result = ExectadorGenericoDeServicos.ExecuteService<ServicoExemploUm, RequestExemploUm, ResponseExemploUm>(requestExemploUm);
+
+            var serviceProvider = DependencyInjectorHandler.GetServiceProvider();
+
+            var exectadorGenericoDeServicos = new ExectadorGenericoDeServicos(serviceProvider);
+
+            var result = exectadorGenericoDeServicos.ExecuteService<ServicoExemploUm, RequestExemploUm, ResponseExemploUm>(requestExemploUm);
 
             Console.WriteLine($"{result.DescricaoConteudo} {result.Conteudo}");
         }
